@@ -14,10 +14,10 @@ const createWindow = () => {
   win = new BrowserWindow({
     width: 400,
     height: 170,
-    icon: path.join(process.cwd(), 'resources', 'logo.png'),
+    icon: path.join(__dirname, 'resources', 'logo.png'),
     title: 'OSB Desktop Alert',
     webPreferences: {
-      preload: path.join(process.cwd(), 'lib', 'preload.js')
+      preload: path.join(__dirname, 'lib', 'preload.js')
     }
   })
 
@@ -30,7 +30,7 @@ app.whenReady().then(async () => {
 
   config = await getConfig()
 
-  tray = new Tray(path.join(process.cwd(), 'resources', 'logo.png'))
+  tray = new Tray(path.join(__dirname, 'resources', 'logo.png'))
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Open',
@@ -64,20 +64,6 @@ app.whenReady().then(async () => {
 ipcMain.handle('getConfig', async () => {
   return config
 })
-
-/*setTimeout(() => {
-  if (!win) {
-    createWindow()
-  }
-  win.webContents.send('playSound', 'sample-3s.mp3')
-}, 3_000)
-
-setTimeout(() => {
-  if (!win) {
-    createWindow()
-  }
-  win.webContents.send('playSound', 'sample-3s.mp3')
-}, 5_000)*/
 
 cron.schedule('*/30 * * * * *', async () => {
   await updateConfig()
