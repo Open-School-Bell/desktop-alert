@@ -12,9 +12,15 @@
       content="default-src 'self'; script-src 'self'"
     />
     <title>OSB Desktop Alert</title>
+    <link rel="stylesheet" href="./alert.css" />
   </head>
   <body>
-    <h1>Hello from Electron renderer!</h1>
-    <p>👋</p>
+    <div class="main">
+      <img src="./logo.png" alt="osb logo" class="logo" />
+      <div class="title">Desktop Alert</div>
+      <div>Group: <span id="groupName"></span></div>
+    </div>
+    <audio id="player" controls></audio>
+    <script src="../lib/renderer.js"></script>
   </body>
 </html>

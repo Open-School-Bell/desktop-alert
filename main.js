@@ -1,17 +1,24 @@
-import {app, BrowserWindow, Menu, Tray, dialog} from 'electron'
+import {app, BrowserWindow, Menu, Tray, dialog, ipcMain} from 'electron'
+import cron from 'node-cron'
 import path from 'path'
+import {isAfter} from 'date-fns'
 
-import {getConfig} from './lib/config.js'
+import {getConfig, updateConfig} from './lib/config.js'
 
 let tray = null
 let config = null
+let win = null
+let lastTriggerTime = new Date()
 
 const createWindow = () => {
-  const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+  win = new BrowserWindow({
+    width: 400,
+    height: 170,
     icon: path.join(process.cwd(), 'resources', 'logo.png'),
-    title: 'OSB Desktop Alert'
+    title: 'OSB Desktop Alert',
+    webPreferences: {
+      preload: path.join(process.cwd(), 'lib', 'preload.js')
+    }
   })
 
   win.removeMenu()
@@ -19,9 +26,9 @@ const createWindow = () => {
 }
 
 app.whenReady().then(async () => {
-  config = await getConfig()
+  await updateConfig()
 
-  console.dir(config)
+  config = await getConfig()
 
   tray = new Tray(path.join(process.cwd(), 'resources', 'logo.png'))
   const contextMenu = Menu.buildFromTemplate([
@@ -52,4 +59,49 @@ app.whenReady().then(async () => {
   ])
   tray.setToolTip('OSB Desktop Alert')
   tray.setContextMenu(contextMenu)
+})
+
+ipcMain.handle('getConfig', async () => {
+  return config
+})
+
+/*setTimeout(() => {
+  if (!win) {
+    createWindow()
+  }
+  win.webContents.send('playSound', 'sample-3s.mp3')
+}, 3_000)
+
+setTimeout(() => {
+  if (!win) {
+    createWindow()
+  }
+  win.webContents.send('playSound', 'sample-3s.mp3')
+}, 5_000)*/
+
+cron.schedule('*/30 * * * * *', async () => {
+  await updateConfig()
+
+  config = await getConfig()
+
+  const playData = JSON.parse(config.playData)
+
+  if (
+    playData &&
+    playData.triggerTime &&
+    isAfter(new Date(playData.triggerTime), lastTriggerTime)
+  ) {
+    if (!win) {
+      createWindow()
+    }
+
+    setTimeout(() => {
+      win.webContents.send('playSound', {
+        fileName: playData.fileName,
+        times: playData.times
+      })
+    }, 1_000)
+  }
+
+  lastTriggerTime = new Date()
 })

@@ -1,0 +1,25 @@
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 2rem;
+}
+
+.main .logo {
+  grid-row-start: span 2;
+  width: 110px;
+}
+
+.main .title {
+  font-size: 30px;
+}
+
+#player {
+  display: none;
+}

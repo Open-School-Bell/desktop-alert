@@ -14,5 +14,11 @@
   "devDependencies": {
     "electron": "^35.0.3",
     "prettier": "^3.5.3"
+  },
+  "dependencies": {
+    "@arcath/utils": "^3.15.0",
+    "date-fns": "^4.1.0",
+    "mkdirp": "^3.0.1",
+    "node-cron": "^3.0.3"
   }
 }
