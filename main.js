@@ -14,10 +14,10 @@ const createWindow = () => {
   win = new BrowserWindow({
     width: 400,
     height: 170,
-    icon: path.join(__dirname, 'resources', 'logo.png'),
+    icon: path.join(import.meta.dirname, 'resources', 'logo.png'),
     title: 'OSB Desktop Alert',
     webPreferences: {
-      preload: path.join(__dirname, 'lib', 'preload.js')
+      preload: path.join(import.meta.dirname, 'lib', 'preload.js')
     }
   })
 
@@ -30,7 +30,7 @@ app.whenReady().then(async () => {
 
   config = await getConfig()
 
-  tray = new Tray(path.join(__dirname, 'resources', 'logo.png'))
+  tray = new Tray(path.join(import.meta.dirname, 'resources', 'logo.png'))
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Open',
