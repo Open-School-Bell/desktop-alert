@@ -61,6 +61,8 @@ app.whenReady().then(async () => {
   tray.setContextMenu(contextMenu)
 })
 
+app.on('window-all-closed', e => e.preventDefault())
+
 ipcMain.handle('getConfig', async () => {
   return config
 })
